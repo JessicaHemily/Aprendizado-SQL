@@ -1,2 +1,2 @@
 # Aprendizado SQL
- Minha trajetória de aprendizado da ferramenta SQL.
+ Minha trajetória de aprendizado da ferramenta SQL SERVER.
