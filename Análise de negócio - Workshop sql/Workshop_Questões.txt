@@ -1,0 +1,63 @@
+WORKSHOP - QUESTÕES
+
+
+1) Análise de docentes por área: 
+
+ - Verificar o número de docentes por área.
+ - Ordenar por pelo número de docentes por área do maior para o menor.
+ - Média de salário dos professores por área.
+ - O salário do professor é igual a 33% do custo do curso.
+
+2) Análise diária de estudantes:
+
+ - Por meio da data de ingresso dos(as) estudantes, identificar a quantidade total de estudantes.
+ - Mostrar os períodos de tempo ano, mês e dia separados em colunas.
+ - apresentar a informação ordenada pela data em que mais ingressaram estudantes.
+
+3) Análise de coordenadores com mais docentes a seu cargo: 
+
+ - Identificar o top 10 dos coordenadores que têm mais docentes a seu cargo.
+ - Ordenar do maior para o menor para obter uma lista ordenada corretamente.
+ - Trazer as informações de contato dos Coordenadores.
+
+4) Análise de profissões com mais estudantes: 
+
+ - Identificar a profissão e a quantidade de estudantes que trabalham.
+ - Mostrar a lista somente das profissões que têm mais de 5 estudantes.
+ - Ordenar da maior para a menor pela profissão que tenha mais estudantes.
+
+5)  Análise de estudantes por área de educação: 
+
+ - Identificar: nome da área, se a disciplina é uma especialização ou curso, a qual período pertence, quantidade de estudantes e valor total do custo da disciplina.
+ - Ordenar o relatório do maior para o menor por valor de custos total, levando em conta os(as) docentes que não têm disciplinas nem estudantes atribuídos e somá-los também.
+
+6) Análise mensal de estudantes por área: 
+
+ - Identificar para cada área: o ano e o mês (concatenados no formato YYYY/MM), quantidade de estudantes e valor total das disciplinas.
+ - Ordenar por mês do mais atual para o mais antigo e por quantidade de clientes da maior para a menor.
+
+7) Análise coordenador orientadores período noturno: 
+
+ - Identificar o nome do coordenador, o documento, o código da área (só o código) e a data de entrada do orientador. Ordenar por área, da maior para a menor.
+
+8) Análise disciplinas sem docentes ou orientadores: 
+
+ - Identificar o tipo de disciplina, o período, a quantidade de áreas únicas e a quantidade total de disciplinas que não têm docentes ou orientadores designados.
+ - Ordenar por tipo de forma descendente. 
+
+9) Análise disciplinas maior por média: 
+
+ - Identificar o nome da disciplina, o custo da disciplina e a média do custo das disciplinas por área.
+ - Uma vez obtido o dado, da média, deve-se visualizar apenas as especializações que estão acima da média. 
+
+10) Análise aumento de salário docentes: 
+
+ - Identificar o nome, o documento, a área, a disciplina e o aumento de salário do docente, este último calculado sendo uma porcentagem do custo da disciplina. Todas as áreas têm uma porcentagem diferente: Marketing = 17%, Design = 20%, Programação = 23%, Produto = 13%, Data = 15%, Ferramentas = 8%.
+Nota: para o exercício 5, os dois indicadores devem estar no mesmo relatório. Identificar se é necessário unificar ou reunir a consulta SQL.
+
+
+
+
+
+
+
