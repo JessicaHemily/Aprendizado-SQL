@@ -1,25 +1,36 @@
 -- workshop
 
--- 1 - ANï¿½LISE DE DOCENTES POR ï¿½REA:
+-- 1 - ANÁLISE DE DOCENTES POR ÁREA:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
 SELECT * FROM Area
 
 SELECT
-	a.Nome AS area,
-	COUNT(DISTINCT s.Documento) AS num_docentes,
-	FORMAT(AVG(d.Custo  * 0.33), 'C3') AS media_salario_docentes
+a.Nome AS area,
+COUNT(DISTINCT s.Documento) AS num_docentes,
+FORMAT(AVG(d.Custo  * 0.33), 'C3') AS media_salario_docentes
 FROM
-	Staff as s
+Staff as s
 INNER JOIN Disciplinas d ON s.Disciplina = d.DisciplinaID
 INNER JOIN Area a ON d.Area = a.AreaID
 GROUP BY
-	a.Nome
+a.Nome
 ORDER BY
-	num_docentes DESC;
+num_docentes DESC;
 
--- 2 - ANï¿½LISE DIï¿½RIA DE ESTUDANTES:
+-- VERSÃO ALONE
+SELECT
+	A.Nome AS Nome_Area,
+	COUNT(DISTINCT S.Documento) AS Num_doscentes,
+	AVG(d.Custo  * 0.33) AS Média_salário
+FROM Staff S
+INNER JOIN Disciplinas D ON S.Disciplina = D.DisciplinaID
+INNER JOIN Area A ON A.AreaID = D.Area
+GROUP BY A.Nome
+ORDER BY Num_doscentes DESC
+
+-- 2 - ANÁLISE DIÁRIA DE ESTUDANTES:
 
 SELECT 
 	COUNT(*) AS Quant_Estudantes,
@@ -35,7 +46,36 @@ FROM Estudantes
 		DAY([Data de Ingresso])
 	ORDER BY COUNT(*) DESC;
 
--- 3 - ANï¿½LISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
+-- VERSÃO ALONE
+
+SELECT * FROM Estudantes
+
+SELECT
+	YEAR([Data de Ingresso]) AS Ano_ingresso,
+	MONTH([Data de Ingresso]) AS Mes_ingresso,
+	DAY([Data de Ingresso]) AS Dia_ingresso,
+	COUNT(*) AS Quant_Estudantes
+FROM Estudantes
+GROUP BY 
+	YEAR([Data de Ingresso]),
+	MONTH([Data de Ingresso]),
+	DAY([Data de Ingresso])
+ORDER BY COUNT(*) DESC
+
+-- 3 - ANÁLISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
+
+Select TOP(10) 
+	Staff.Supervisor,
+	count(*) as total_docentes, 
+	Supervisor.Nome, 
+	Supervisor.Sobrenome,
+	Supervisor.Telefone
+From Staff
+INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
+group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
+order by total_docentes DESC;
+
+-- VERSÃO ALONE
 
 SELECT * FROM Staff
 SELECT * FROM Supervisor
@@ -50,25 +90,25 @@ GROUP BY CONCAT(SUP.Nome,'-',SUP.Sobrenome), SUP.Telefone
 ORDER BY N_Docentes DESC
 
 
--- 4 - ANï¿½LISE DE PROFISSï¿½ES COM MAIS ESTUDANTES:
+-- 4 - ANÁLISE DE PROFISSÕES COM MAIS ESTUDANTES:
 
 SELECT * FROM Area
 
 SELECT * FROM Staff
 SELECT * FROM Supervisor
 SELECT * FROM Disciplinas
-SELECT * FROM Profissï¿½es
+SELECT * FROM Profissões
 SELECT * FROM Estudantes
 SELECT * FROM Area
 
-select Profissï¿½es.Profissï¿½es, count(*) as total_estudantes
+select Profissões.Profissões, count(*) as total_estudantes
 from Estudantes
-inner join Profissï¿½es on Profissï¿½es.Profissï¿½esID = Estudantes.Profissï¿½o
-group by Profissï¿½es.Profissï¿½es
+inner join Profissões on Profissões.ProfissõesID = Estudantes.Profissão
+group by Profissões.Profissões
 Having count(*) > 5
 order by total_estudantes DESC;
 
--- 5 - ANï¿½LISE DE ESTUDANTES POR ï¿½REA DE EDUCAï¿½ï¿½O:
+-- 5 - ANÁLISE DE ESTUDANTES POR ÁREA DE EDUCAÇÃO:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -80,7 +120,7 @@ SELECT
 	D.Nome AS Curso,
 	D.Tipo AS Tipo,
 	D.Custo AS Custo,
-	d.Jornada AS Perï¿½odo,
+	d.Jornada AS Período,
 	COUNT(E.EstudantesID) AS Quant_Estudantes
 
 FROM Disciplinas D
@@ -96,7 +136,7 @@ GROUP BY
 ORDER BY Quant_Estudantes DESC;
 
 
--- 6 ANï¿½LISE MENSAL DE ESTUDANTES POR ï¿½REA:
+-- 6 ANÁLISE MENSAL DE ESTUDANTES POR ÁREA:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -116,7 +156,7 @@ INNER JOIN Estudantes E ON E.Docente = S.DocentesID
 GROUP BY A.AreaID,A.Nome, CONCAT(YEAR(E.[Data de Ingresso]),'/',MONTH(E.[Data de Ingresso]))
 ORDER BY AnoMes DESC, Quant_estudantes DESC;
 
--- 7 ANï¿½LISE COORDENADOR ORIENTADORES PERï¿½ODO NOTURNO:
+-- 7 ANÁLISE COORDENADOR ORIENTADORES PERÍODO NOTURNO:
 
 SELECT * FROM Supervisor
 SELECT * FROM Area
@@ -136,7 +176,7 @@ WHERE D.Jornada =	'Noite'
 ORDER BY A.AreaID DESC;
 
 
--- 8 ANï¿½LISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
+-- 8 ANÁLISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
 
 
 SELECT COUNT(*) FROM Disciplinas WHERE DisciplinaID IS NULL;
@@ -172,17 +212,7 @@ WHERE DisciplinaID NOT IN
 GROUP BY Area
 
 
--- 9 ANï¿½LISE DISCIPLINA MAIOR POR Mï¿½DIA:
-
-
-
-
-
-SELECT
-
-FROM Disciplinas
-
--- 9 ANï¿½LISE AUMENTO DE SALï¿½RIO POR Mï¿½DIA:
+-- 9 ANÁLISE AUMENTO DE SALÁRIO POR MÉDIA:
 
 SELECT
 	D2.Nome,
@@ -191,7 +221,7 @@ SELECT
 	(SELECT
 		AVG(D1.Custo) 
 		FROM Disciplinas D1
-		WHERE D1.Area = D2.Area) AS Mï¿½dia	
+		WHERE D1.Area = D2.Area) AS Média	
 	
 FROM Disciplinas D2
 WHERE D2.Custo > (SELECT
@@ -199,39 +229,86 @@ WHERE D2.Custo > (SELECT
 		FROM Disciplinas D1
 		WHERE D1.Area = D2.Area)
 
--- 10 ANï¿½LISE AUMENTO DE SALï¿½RIO DOCENTES:
+-- 10 ANÁLISE AUMENTO DE SALÁRIO DOCENTES:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
 SELECT * FROM Area
 
+
 SELECT
-	S.Nome AS Docente,
+	CONCAT(S.Nome,' - ',S.Sobrenome) AS Docente,
 	S.Documento,
-	A.AreaID AS Area,
-	d.Nome AS Disciplina,
-	CASE 	WHEN A.Nome = 'Ux Design' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.20
-		
-	WHEN A.Nome = 'Marketing Digital' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.17
-
-	WHEN A.Nome = 'Programaï¿½ï¿½o' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.23
-
-	WHEN A.Nome = 'Produtos' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.13
-
-	WHEN A.Nome = 'Dados' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.15
-
-	WHEN A.Nome = 'Ferramentas' THEN
-		(0.33*D.Custo) +(0.33*D.Custo)*0.08
-
-	END AS Aumento
+	A.Nome AS Area,
+	D.Nome AS Disciplina,
+	0.3*(D.Custo) AS Salário_antigo,
+	CASE 
+		WHEN A.Nome = 'Ux Design' THEN
+			FORMAT(1.2*(0.3*(D.Custo)),'C3')
+		WHEN A.Nome = 'Marketing Digital' THEN
+			FORMAT(1.17*(0.3*(D.Custo)),'C3')
+		WHEN A.Nome = 'Programação' THEN
+			FORMAT(1.23*(0.3*(D.Custo)),'C3')
+		WHEN A.Nome = 'Produtos' THEN
+			FORMAT(1.13*(0.3*(D.Custo)),'C3')
+		WHEN A.Nome = 'Dados' THEN
+			FORMAT(1.15*(0.3*(D.Custo)),'C3')
+		WHEN A.Nome = 'Ferramentas' THEN
+			FORMAT(1.08*(0.3*(D.Custo)),'C3')
+	END AS Salário_com_Aumento
 FROM Staff S
-INNER JOIN Disciplinas D ON S.Disciplina = D.DisciplinaID
-INNER JOIN Area A ON D.Area = A.AreaID
+LEFT JOIN Disciplinas D ON D.DisciplinaID = S.Disciplina
+LEFT JOIN Area A ON A.AreaID = D.Area
 
 
-GROUP BY Area
+
+
+
+--SQL AVANÇADO - AULA 23 - 09/05
+
+-- TESTE - APRENDENDO A USAR SUBQUERY
+
+WITH TESTE (Nome, idade) AS
+(
+SELECT 
+	E.Nome as Nome,
+	E.Idade as idade
+	FROM Estudantes E
+)
+SELECT *
+from TESTE
+
+---- USANDO SUBQUERY - RESULTADO FINAL
+
+SELECT * FROM Disciplinas
+SELECT * FROM Estudantes
+SELECT * FROM Staff
+
+WITH consulta_cte -- (area_id,	nome_area_periodo,	Custo_area,	Data_ingresso,	indice)
+AS
+(
+SELECT 
+	A.AreaID AS area_id,
+	CONCAT(A.Nome,'-',D.Jornada) as nome_area_periodo,
+	D.Custo AS Custo_area,
+	CONVERT(VARCHAR(10),E.[Data de Ingresso],103) AS Data_ingresso,
+	ROW_NUMBER() OVER(
+						PARTITION BY CONCAT(A.Nome,'-',D.Jornada)
+						ORDER BY E.[Data de Ingresso] ASC)
+					AS indice
+FROM Estudantes E
+LEFT JOIN Staff S ON S.DocentesID = E.Docente
+LEFT JOIN Disciplinas D ON D.DisciplinaID = S.Disciplina
+LEFT JOIN Area A ON A.AreaID = D.Area
+WHERE 
+	YEAR(E.[Data de Ingresso])=2021 
+)
+
+SELECT 
+	nome_area_periodo,
+	FORMAT(sum(custo_area),'C3') as soma_primeiro_meses
+	FROM consulta_cte
+WHERE indice <4
+GROUP BY nome_area_periodo,area_id
+ORDER BY area_id	
+
