@@ -198,20 +198,44 @@ GROUP BY Area
 
 -- 9 ANÁLISE AUMENTO DE SALÁRIO POR MÉDIA:
 
+-- Utilizando subqueries com SELECT:
 SELECT
+	D2.Area,
 	D2.Nome,
 	D2.Custo AS Custo,
-	D2.Area,
 	(SELECT
 		AVG(D1.Custo) 
 		FROM Disciplinas D1
-		WHERE D1.Area = D2.Area) AS Média	
+		WHERE D1.Area = D2.Area) AS Média_Custo	
 	
 FROM Disciplinas D2
 WHERE D2.Custo > (SELECT
 		AVG(D1.Custo) 
 		FROM Disciplinas D1
 		WHERE D1.Area = D2.Area)
+
+-- Também é possível resolver este problema usando Common Table Expression (subconsultas) com  WITH:
+
+WITH A_CUSTO (AREA, MÉDIA_CUSTO) AS
+	(
+	SELECT 
+		D.Area AS AREA,
+		AVG(D.Custo) AS MÉDIA_CUSTO
+	FROM Disciplinas D
+	GROUP BY D.Area
+	)
+
+	SELECT
+		D2.Area AS AREA,
+		D2.Nome AS DISCIPLINA,
+		D2.Custo AS CUSTO,
+		(
+			SELECT 
+				A_CUSTO.MÉDIA_CUSTO
+			FROM A_CUSTO
+			WHERE A_CUSTO.AREA = D2.Area
+		) AS MÉDIA_CUSTO
+	FROM Disciplinas D2
 
 -- 10 ANÁLISE AUMENTO DE SALÁRIO DOCENTES:
 
