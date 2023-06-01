@@ -59,7 +59,7 @@ INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
 group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
 order by total_docentes DESC;
 
--- Considerando que vários coordenadores possuem 5 docentes ao seu cargo, estes então, compartilham a décima colocação.
+-- Considerando que vários coordenadores possuem 5 docentes a seu cargo, estes então, compartilham a décima colocação.
 -- Para mostrar o TOP(10) completo, sem 'truncar' no índice 10, usamos a clausula WITH TIES.
 
 Select TOP(10) WITH TIES
