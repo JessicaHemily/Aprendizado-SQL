@@ -32,22 +32,6 @@ ORDER BY Num_doscentes DESC
 
 -- 2 - ANÁLISE DIÁRIA DE ESTUDANTES:
 
-SELECT 
-	COUNT(*) AS Quant_Estudantes,
-	YEAR([Data de Ingresso]) AS Ano,
-	MONTH([Data de Ingresso]) AS Mes,
-	DAY([Data de Ingresso]) AS Dia
-
-FROM Estudantes
-
-	GROUP BY
-		YEAR([Data de Ingresso]),
-		MONTH([Data de Ingresso]),
-		DAY([Data de Ingresso])
-	ORDER BY COUNT(*) DESC;
-
--- VERSÃO ALONE
-
 SELECT * FROM Estudantes
 
 SELECT
@@ -75,19 +59,19 @@ INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
 group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
 order by total_docentes DESC;
 
--- VERSÃO ALONE
+-- Considerando que vários coordenadores possuem 5 docentes ao seu cargo, estes então, compartilham a décima colocação.
+-- Para mostrar o TOP(10) completo, sem 'truncar' no índice 10, usamos a clausula WITH TIES.
 
-SELECT * FROM Staff
-SELECT * FROM Supervisor
-
-SELECT TOP(10)
-	CONCAT(SUP.Nome,'-',SUP.Sobrenome) AS Nome_Supervisor,
-	SUP.Telefone AS Contato,
-	COUNT(*) AS N_Docentes
-FROM Staff S
-INNER JOIN Supervisor SUP	ON S.Supervisor = SUP.Supervisor_ID
-GROUP BY CONCAT(SUP.Nome,'-',SUP.Sobrenome), SUP.Telefone
-ORDER BY N_Docentes DESC
+Select TOP(10) WITH TIES
+	Staff.Supervisor,
+	count(*) as total_docentes, 
+	Supervisor.Nome, 
+	Supervisor.Sobrenome,
+	Supervisor.Telefone
+From Staff
+INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
+group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
+order by total_docentes DESC;
 
 
 -- 4 - ANÁLISE DE PROFISSÕES COM MAIS ESTUDANTES:
