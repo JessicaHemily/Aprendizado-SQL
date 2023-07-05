@@ -1,36 +1,23 @@
 -- workshop
 
--- 1 - ANÁLISE DE DOCENTES POR ÁREA:
+-- 1 - ANï¿½LISE DE DOCENTES POR ï¿½REA:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
 SELECT * FROM Area
 
 SELECT
-a.Nome AS area,
-COUNT(DISTINCT s.Documento) AS num_docentes,
-FORMAT(AVG(d.Custo  * 0.33), 'C3') AS media_salario_docentes
-FROM
-Staff as s
+	a.Nome AS area,
+	COUNT(DISTINCT s.Documento) AS num_docentes,
+	FORMAT(AVG(d.Custo  * 0.33), 'C3') AS media_salario_docentes
+FROM Staff as s
 INNER JOIN Disciplinas d ON s.Disciplina = d.DisciplinaID
 INNER JOIN Area a ON d.Area = a.AreaID
-GROUP BY
-a.Nome
-ORDER BY
-num_docentes DESC;
+GROUP BY a.Nome
+ORDER BY num_docentes DESC;
 
--- VERSÃO ALONE
-SELECT
-	A.Nome AS Nome_Area,
-	COUNT(DISTINCT S.Documento) AS Num_doscentes,
-	AVG(d.Custo  * 0.33) AS Média_salário
-FROM Staff S
-INNER JOIN Disciplinas D ON S.Disciplina = D.DisciplinaID
-INNER JOIN Area A ON A.AreaID = D.Area
-GROUP BY A.Nome
-ORDER BY Num_doscentes DESC
 
--- 2 - ANÁLISE DIÁRIA DE ESTUDANTES:
+-- 2 - ANï¿½LISE DIï¿½RIA DE ESTUDANTES:
 
 SELECT * FROM Estudantes
 
@@ -46,7 +33,7 @@ GROUP BY
 	DAY([Data de Ingresso])
 ORDER BY COUNT(*) DESC
 
--- 3 - ANÁLISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
+-- 3 - ANï¿½LISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
 
 Select TOP(10) 
 	Staff.Supervisor,
@@ -59,8 +46,8 @@ INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
 group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
 order by total_docentes DESC;
 
--- Considerando que vários coordenadores possuem 5 docentes a seu cargo, estes então, compartilham a décima colocação.
--- Para mostrar o TOP(10) completo, sem 'truncar' no índice 10, usamos a clausula WITH TIES.
+-- Considerando que vï¿½rios coordenadores possuem 5 docentes a seu cargo, estes entï¿½o, compartilham a dï¿½cima colocaï¿½ï¿½o.
+-- Para mostrar o TOP(10) completo, sem 'truncar' no ï¿½ndice 10, usamos a clausula WITH TIES.
 
 Select TOP(10) WITH TIES
 	Staff.Supervisor,
@@ -74,25 +61,25 @@ group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Tel
 order by total_docentes DESC;
 
 
--- 4 - ANÁLISE DE PROFISSÕES COM MAIS ESTUDANTES:
+-- 4 - ANï¿½LISE DE PROFISSï¿½ES COM MAIS ESTUDANTES:
 
 SELECT * FROM Area
 
 SELECT * FROM Staff
 SELECT * FROM Supervisor
 SELECT * FROM Disciplinas
-SELECT * FROM Profissões
+SELECT * FROM Profissoes
 SELECT * FROM Estudantes
 SELECT * FROM Area
 
-select Profissões.Profissões, count(*) as total_estudantes
+select Profissoes.Profissoes, count(*) as total_estudantes
 from Estudantes
-inner join Profissões on Profissões.ProfissõesID = Estudantes.Profissão
-group by Profissões.Profissões
+inner join Profissoes on Profissoes.ProfissoesID = Estudantes.Profissao
+group by Profissoes.Profissoes
 Having count(*) > 5
 order by total_estudantes DESC;
 
--- 5 - ANÁLISE DE ESTUDANTES POR ÁREA DE EDUCAÇÃO:
+-- 5 - ANï¿½LISE DE ESTUDANTES POR ï¿½REA DE EDUCAï¿½ï¿½O:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -104,7 +91,7 @@ SELECT
 	D.Nome AS Curso,
 	D.Tipo AS Tipo,
 	D.Custo AS Custo,
-	d.Jornada AS Período,
+	d.Jornada AS Periodo,
 	COUNT(E.EstudantesID) AS Quant_Estudantes
 
 FROM Disciplinas D
@@ -120,7 +107,7 @@ GROUP BY
 ORDER BY Quant_Estudantes DESC;
 
 
--- 6 ANÁLISE MENSAL DE ESTUDANTES POR ÁREA:
+-- 6 ANï¿½LISE MENSAL DE ESTUDANTES POR ï¿½REA:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -140,7 +127,7 @@ INNER JOIN Estudantes E ON E.Docente = S.DocentesID
 GROUP BY A.AreaID,A.Nome, CONCAT(YEAR(E.[Data de Ingresso]),'/',MONTH(E.[Data de Ingresso]))
 ORDER BY AnoMes DESC, Quant_estudantes DESC;
 
--- 7 ANÁLISE COORDENADOR ORIENTADORES PERÍODO NOTURNO:
+-- 7 ANï¿½LISE COORDENADOR ORIENTADORES PERï¿½ODO NOTURNO:
 
 SELECT * FROM Supervisor
 SELECT * FROM Area
@@ -160,7 +147,7 @@ WHERE D.Jornada =	'Noite'
 ORDER BY A.AreaID DESC;
 
 
--- 8 ANÁLISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
+-- 8 ANï¿½LISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
 
 
 SELECT COUNT(*) FROM Disciplinas WHERE DisciplinaID IS NULL;
@@ -196,7 +183,7 @@ WHERE DisciplinaID NOT IN
 GROUP BY Area
 
 
--- 9 ANÁLISE AUMENTO DE SALÁRIO POR MÉDIA:
+-- 9 ANï¿½LISE AUMENTO DE SALï¿½RIO POR Mï¿½DIA:
 
 -- Utilizando subqueries com SELECT:
 SELECT
@@ -206,7 +193,7 @@ SELECT
 	(SELECT
 		AVG(D1.Custo) 
 		FROM Disciplinas D1
-		WHERE D1.Area = D2.Area) AS Média_Custo	
+		WHERE D1.Area = D2.Area) AS Media_Custo	
 	
 FROM Disciplinas D2
 WHERE D2.Custo > (SELECT
@@ -214,13 +201,13 @@ WHERE D2.Custo > (SELECT
 		FROM Disciplinas D1
 		WHERE D1.Area = D2.Area)
 
--- Também é possível resolver este problema usando Common Table Expression (subconsultas) com  WITH:
+-- Tambï¿½m ï¿½ possï¿½vel resolver este problema usando Common Table Expression (subconsultas) com  WITH:
 
-WITH A_CUSTO (AREA, MÉDIA_CUSTO) AS
+WITH A_CUSTO (AREA, MeDIA_CUSTO) AS
 	(
 	SELECT 
 		D.Area AS AREA,
-		AVG(D.Custo) AS MÉDIA_CUSTO
+		AVG(D.Custo) AS MeDIA_CUSTO
 	FROM Disciplinas D
 	GROUP BY D.Area
 	)
@@ -231,13 +218,13 @@ WITH A_CUSTO (AREA, MÉDIA_CUSTO) AS
 		D2.Custo AS CUSTO,
 		(
 			SELECT 
-				A_CUSTO.MÉDIA_CUSTO
+				A_CUSTO.MeDIA_CUSTO
 			FROM A_CUSTO
 			WHERE A_CUSTO.AREA = D2.Area
-		) AS MÉDIA_CUSTO
+		) AS MeDIA_CUSTO
 	FROM Disciplinas D2
 
--- 10 ANÁLISE AUMENTO DE SALÁRIO DOCENTES:
+-- 10 ANï¿½LISE AUMENTO DE SALï¿½RIO DOCENTES:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
@@ -249,13 +236,13 @@ SELECT
 	S.Documento,
 	A.Nome AS Area,
 	D.Nome AS Disciplina,
-	0.3*(D.Custo) AS Salário_antigo,
+	0.3*(D.Custo) AS Salario_antigo,
 	CASE 
 		WHEN A.Nome = 'Ux Design' THEN
 			FORMAT(1.2*(0.3*(D.Custo)),'C3')
 		WHEN A.Nome = 'Marketing Digital' THEN
 			FORMAT(1.17*(0.3*(D.Custo)),'C3')
-		WHEN A.Nome = 'Programação' THEN
+		WHEN A.Nome = 'Programaï¿½ï¿½o' THEN
 			FORMAT(1.23*(0.3*(D.Custo)),'C3')
 		WHEN A.Nome = 'Produtos' THEN
 			FORMAT(1.13*(0.3*(D.Custo)),'C3')
@@ -263,7 +250,7 @@ SELECT
 			FORMAT(1.15*(0.3*(D.Custo)),'C3')
 		WHEN A.Nome = 'Ferramentas' THEN
 			FORMAT(1.08*(0.3*(D.Custo)),'C3')
-	END AS Salário_com_Aumento
+	END AS Salario_com_Aumento
 FROM Staff S
 LEFT JOIN Disciplinas D ON D.DisciplinaID = S.Disciplina
 LEFT JOIN Area A ON A.AreaID = D.Area
@@ -272,7 +259,7 @@ LEFT JOIN Area A ON A.AreaID = D.Area
 
 
 
---SQL AVANÇADO - AULA 23 - 09/05
+--SQL AVANï¿½ADO - AULA 23 - 09/05
 
 -- TESTE - APRENDENDO A USAR SUBQUERY
 
