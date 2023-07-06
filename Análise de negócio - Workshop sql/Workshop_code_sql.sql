@@ -1,6 +1,6 @@
 -- workshop
 
--- 1 - AN�LISE DE DOCENTES POR �REA:
+-- 1 - ANALISE DE DOCENTES POR AREA:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
@@ -17,7 +17,7 @@ GROUP BY a.Nome
 ORDER BY num_docentes DESC;
 
 
--- 2 - AN�LISE DI�RIA DE ESTUDANTES:
+-- 2 - ANALISE DIARIA DE ESTUDANTES:
 
 SELECT * FROM Estudantes
 
@@ -33,7 +33,7 @@ GROUP BY
 	DAY([Data de Ingresso])
 ORDER BY COUNT(*) DESC
 
--- 3 - AN�LISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
+-- 3 - ANALISE DE COORDENADORES COM MAIS DOCENTES A SEU CARGO:
 
 Select TOP(10) 
 	Staff.Supervisor,
@@ -46,8 +46,8 @@ INNER JOIN Supervisor on Supervisor.Supervisor_ID = Staff.Supervisor
 group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Telefone
 order by total_docentes DESC;
 
--- Considerando que v�rios coordenadores possuem 5 docentes a seu cargo, estes ent�o, compartilham a d�cima coloca��o.
--- Para mostrar o TOP(10) completo, sem 'truncar' no �ndice 10, usamos a clausula WITH TIES.
+-- Considerando que varios coordenadores possuem 5 docentes a seu cargo, estes entao, compartilham a decima colocaçao.
+-- Para mostrar o TOP(10) completo, sem 'truncar' no indice 10, usamos a clausula WITH TIES.
 
 Select TOP(10) WITH TIES
 	Staff.Supervisor,
@@ -61,7 +61,7 @@ group by Staff.Supervisor, Supervisor.Nome, Supervisor.Sobrenome, Supervisor.Tel
 order by total_docentes DESC;
 
 
--- 4 - AN�LISE DE PROFISS�ES COM MAIS ESTUDANTES:
+-- 4 - ANALISE DE PROFISSOES COM MAIS ESTUDANTES:
 
 SELECT * FROM Area
 
@@ -79,7 +79,7 @@ group by Profissoes.Profissoes
 Having count(*) > 5
 order by total_estudantes DESC;
 
--- 5 - AN�LISE DE ESTUDANTES POR �REA DE EDUCA��O:
+-- 5 - ANALISE DE ESTUDANTES POR AREA DE EDUCAÇAO:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -107,7 +107,7 @@ GROUP BY
 ORDER BY Quant_Estudantes DESC;
 
 
--- 6 AN�LISE MENSAL DE ESTUDANTES POR �REA:
+-- 6 ANALISE MENSAL DE ESTUDANTES POR AREA:
 
 SELECT * FROM Estudantes
 SELECT * FROM Area
@@ -124,10 +124,12 @@ FROM Area A
 INNER JOIN Disciplinas D ON A.AreaID = D.Area
 INNER JOIN Staff S ON S.Disciplina = D.DisciplinaID
 INNER JOIN Estudantes E ON E.Docente = S.DocentesID
-GROUP BY A.AreaID,A.Nome, CONCAT(YEAR(E.[Data de Ingresso]),'/',MONTH(E.[Data de Ingresso]))
+GROUP BY A.AreaID,
+		A.Nome,
+		CONCAT(YEAR(E.[Data de Ingresso]),'/',MONTH(E.[Data de Ingresso]))
 ORDER BY AnoMes DESC, Quant_estudantes DESC;
 
--- 7 AN�LISE COORDENADOR ORIENTADORES PER�ODO NOTURNO:
+-- 7 ANALISE COORDENADOR ORIENTADORES PERIODO NOTURNO:
 
 SELECT * FROM Supervisor
 SELECT * FROM Area
@@ -147,7 +149,7 @@ WHERE D.Jornada =	'Noite'
 ORDER BY A.AreaID DESC;
 
 
--- 8 AN�LISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
+-- 8 ANALISE DISCIPLINAS SEM DOCENTES OU ORIENTADORES:
 
 
 SELECT COUNT(*) FROM Disciplinas WHERE DisciplinaID IS NULL;
@@ -183,7 +185,7 @@ WHERE DisciplinaID NOT IN
 GROUP BY Area
 
 
--- 9 AN�LISE AUMENTO DE SAL�RIO POR M�DIA:
+-- 9 ANALISE AUMENTO DE SALARIO POR MEDIA:
 
 -- Utilizando subqueries com SELECT:
 SELECT
@@ -201,7 +203,7 @@ WHERE D2.Custo > (SELECT
 		FROM Disciplinas D1
 		WHERE D1.Area = D2.Area)
 
--- Tamb�m � poss�vel resolver este problema usando Common Table Expression (subconsultas) com  WITH:
+-- Tambem e possivel resolver este problema usando Common Table Expression (subconsultas) com  WITH:
 
 WITH A_CUSTO (AREA, MeDIA_CUSTO) AS
 	(
@@ -224,7 +226,7 @@ WITH A_CUSTO (AREA, MeDIA_CUSTO) AS
 		) AS MeDIA_CUSTO
 	FROM Disciplinas D2
 
--- 10 AN�LISE AUMENTO DE SAL�RIO DOCENTES:
+-- 10 ANALISE AUMENTO DE SALARIO DOCENTES:
 
 SELECT * FROM Disciplinas
 SELECT * FROM Staff
@@ -259,7 +261,7 @@ LEFT JOIN Area A ON A.AreaID = D.Area
 
 
 
---SQL AVAN�ADO - AULA 23 - 09/05
+--SQL AVANÇADO - AULA 23 - 09/05
 
 -- TESTE - APRENDENDO A USAR SUBQUERY
 
